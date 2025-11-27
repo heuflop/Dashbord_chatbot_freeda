@@ -183,46 +183,56 @@ const TicketDetail = () => {
                             <h3 className="font-semibold text-gray-900">Historique des échanges</h3>
                         </div>
 
-                        <div className="p-6 space-y-6 bg-gray-50/30 min-h-[300px]">
-                            {/* Message 1: Client (Historique) - FIRST */}
-                            {ticket.historique && (
-                                <div className="flex gap-4">
-                                    <div className="flex-shrink-0">
-                                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold text-gray-600 border-2 border-white shadow-sm">
-                                            {ticket.client.substring(0, 2).toUpperCase()}
+                        <div className="p-6 space-y-6 bg-gray-50/30 min-h-[300px] max-h-[600px] overflow-y-auto">
+                            {ticket.messages && ticket.messages.length > 0 ? (
+                                ticket.messages.map((message, index) => {
+                                    const isUser = message.role === 'user';
+                                    const isClient = message.role === 'user' || message.author?.toLowerCase().includes('client');
+
+                                    return (
+                                        <div key={index} className={`flex gap-4 ${isClient ? '' : 'flex-row-reverse'}`}>
+                                            <div className="flex-shrink-0">
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 border-white shadow-sm ${isClient
+                                                        ? 'bg-gray-200 text-gray-600'
+                                                        : 'bg-red-600 text-white'
+                                                    }`}>
+                                                    {isClient
+                                                        ? ticket.client.substring(0, 2).toUpperCase()
+                                                        : 'IA'
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div className={`flex flex-col ${isClient ? '' : 'items-end'} max-w-[85%]`}>
+                                                <div className="flex items-baseline gap-2 mb-1">
+                                                    {!isClient && (
+                                                        <span className="text-xs text-gray-400">
+                                                            {message.timestamp ? new Date(message.timestamp).toLocaleString() : ''}
+                                                        </span>
+                                                    )}
+                                                    <span className="font-semibold text-gray-900 text-sm">
+                                                        {message.author || (isClient ? ticket.client : 'Assistant IA')}
+                                                    </span>
+                                                    {isClient && (
+                                                        <span className="text-xs text-gray-400">
+                                                            {message.timestamp ? new Date(message.timestamp).toLocaleString() : ''}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed whitespace-pre-wrap ${isClient
+                                                        ? 'bg-white border border-gray-100 text-gray-700 rounded-tl-none'
+                                                        : 'bg-gray-900 text-white rounded-tr-none'
+                                                    }`}>
+                                                    {message.content}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex flex-col max-w-[85%]">
-                                        <div className="flex items-baseline gap-2 mb-1">
-                                            <span className="font-semibold text-gray-900 text-sm">{ticket.client}</span>
-                                            <span className="text-xs text-gray-400">{new Date(ticket.date).toLocaleString()}</span>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-gray-700 text-sm leading-relaxed">
-                                            {ticket.historique}
-                                        </div>
-                                    </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="text-center text-gray-500 py-8">
+                                    Aucun message dans la conversation
                                 </div>
                             )}
-
-                            {/* Message 2: Agent Response - SECOND */}
-                            <div className="flex gap-4 flex-row-reverse">
-                                <div className="flex-shrink-0">
-                                    <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-sm font-bold text-white border-2 border-white shadow-sm">
-                                        {ticket.agent ? ticket.agent.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'IA'}
-                                    </div>
-                                </div>
-                                <div className="flex flex-col items-end max-w-[85%]">
-                                    <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="text-xs text-gray-400">{new Date(new Date(ticket.date).getTime() + 120000).toLocaleString()}</span>
-                                        <span className="font-semibold text-gray-900 text-sm">
-                                            {ticket.agent} ({ticket.agent ? ticket.agent.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'IA'})
-                                        </span>
-                                    </div>
-                                    <div className="bg-gray-900 text-white p-4 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed">
-                                        Bonjour {ticket.client}, je comprends votre problème. Nos équipes reviendront vers vous !!
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         {/* Reply Area */}

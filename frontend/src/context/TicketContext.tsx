@@ -7,12 +7,19 @@ export interface Ticket {
     id: string;
     client: string;
     motif: string;
+    category?: string; // Added category
     status: TicketStatus;
     priority: TicketPriority;
     channel: string;
     date: string; // ISO string
     agent?: string;
     historique?: string;
+    messages?: Array<{
+        role: string;
+        content: string;
+        timestamp: string;
+        author: string;
+    }>;
     recommandation?: string;
     sentiment?: string;
 }
@@ -105,13 +112,8 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
             let channelMatch = true;
             if (filters.channel !== 'Tous canaux') {
-                if (filters.channel === 'IA' || filters.channel === 'Agent X') {
-                    // Check agent field for IA and Agent X
-                    channelMatch = ticket.agent === filters.channel;
-                } else {
-                    // Check channel field for others
-                    channelMatch = ticket.channel === filters.channel;
-                }
+                // Simple case-insensitive match
+                channelMatch = ticket.channel.toLowerCase() === filters.channel.toLowerCase();
             }
 
             return yearMatch && monthMatch && dayMatch && searchMatch && statusMatch && priorityMatch && channelMatch;

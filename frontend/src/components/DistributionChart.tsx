@@ -40,7 +40,9 @@ const DistributionChart = () => {
         const groupedData: Record<string, number> = {};
 
         filteredTickets.forEach(ticket => {
-            groupedData[ticket.motif] = (groupedData[ticket.motif] || 0) + 1;
+            // Use category for general grouping, fallback to 'Autre' if missing
+            const key = ticket.category || "Autre";
+            groupedData[key] = (groupedData[key] || 0) + 1;
         });
 
         return Object.entries(groupedData)
@@ -50,7 +52,7 @@ const DistributionChart = () => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-80">
-            <h3 className="text-base font-bold text-gray-900 mb-2">Répartition par motif</h3>
+            <h3 className="text-base font-bold text-gray-900 mb-2">Répartition par catégorie</h3>
             <p className="text-xs text-gray-500 mb-6">Distribution des types de demandes</p>
             <div className="w-full h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">

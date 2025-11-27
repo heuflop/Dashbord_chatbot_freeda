@@ -64,14 +64,12 @@ const Filters = () => {
                 className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
                 <option value="Tous canaux">Tous canaux</option>
-                <option value="Chatbot">Chatbot</option>
+                <option value="chat">Chatbot</option>
                 <option value="Callbot">Callbot</option>
                 <option value="WhatsApp">WhatsApp</option>
                 <option value="SMS">SMS</option>
                 <option value="Email">Email</option>
                 <option value="Tweeter">Tweeter</option>
-                <option value="IA">IA</option>
-                <option value="Agent X">Agent X</option>
             </select>
 
             {/* Date Filters (kept for chart compatibility) */}
